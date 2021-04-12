@@ -1,3 +1,8 @@
+# Projects
+.vscode/
+dist/
+000-*
+
 # Logs
 logs
 *.log

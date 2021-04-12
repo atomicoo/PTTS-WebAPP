@@ -1,0 +1,46 @@
+text:
+  graphemes: &gs !!python/object/apply:eval ['list("abcdefghijklmnopqrstuvwxyz")']
+  phonemes: &ps !!python/object/apply:eval ['["AA0","AA1","AA2","AE0","AE1","AE2","AH0","AH1","AH2","AO0","AO1","AO2","AW0","AW1","AW2","AY0","AY1","AY2","B","CH","D","DH","EH0","EH1","EH2","ER0","ER1","ER2","EY0","EY1","EY2","F","G","HH","IH0","IH1","IH2","IY0","IY1","IY2","JH","K","L","M","N","NG","OW0","OW1","OW2","OY0","OY1","OY2","P","R","S","SH","T","TH","UH0","UH1","UH2","UW","UW0","UW1","UW2","V","W","Y","Z","ZH"]']
+  specials: &sp !!python/object/apply:eval ['["<pad>", "<unk>"]']
+  punctuations: &pt !!python/object/apply:eval ['[".", ",", "?", "!", " ", "-"]']
+  units_list: &ul !!python/object/apply:eval ['us+sp+pt', {'us': *ps, 'sp': *sp, 'pt': *pt}]
+  use_phonemes: &up true
+audio:
+  n_mel_channels: &nm 80
+  filter_length: 1024
+  hop_length: 256  # WARNING: this can't be changed.
+  win_length: 1024
+  sampling_rate: &sr 22050
+  segment_length: *sr
+  pad_short: 2000
+  mel_fmin: 80.0
+  mel_fmax: 7600.0
+  # Precomputed statistics for log-mel-spectrs for speech dataset
+  spec_mean: -5.522  # for LJSpeech dataset
+  spec_std: 2.063  # for LJSpeech dataset
+  spec_min: -11.5129  # for LJSpeech dataset
+  spec_max: 2.0584  # for LJSpeech dataset
+  # Others
+  force_frame_rate: true  # force match sampling rate
+  normalize: 
+    match_volume: false
+    trim_silence: false
+  reduction_rate: 4
+parallel:
+  ground_truth: false
+  out_channels: *nm  # equal to ${audio.n_mel_channels}
+  alphabet_size: !!python/object/apply:eval ['len(ul)', {'ul': *ul}]
+  channels: 128
+  enc_kernel_size: 4
+  dec_kernel_size: 4
+  enc_dilations: !!python/object/apply:eval ['4 * [1,2,4]   + [1]']  # receptive field is max 15
+  dec_dilations: !!python/object/apply:eval ['4 * [1,2,4,8] + [1]']  # receptive field is max 32
+  normalize: FreqNorm  # 'freq', 'layer', 'batch'
+  activation: torch.nn.ReLU  # 'relu', 'linear', 'sigmoid'
+  final_activation: torch.nn.Identity
+  pos_mode: 'duration'  # 'standard', 'duration'
+  interpolate: false  # true
+  separate_duration_grad: true
+  checkpoint: 'ljspeech-parallel-epoch0100.pth'
+vocoder:
+  checkpoint: 'ljspeech-melgan-epoch3200.pth'
