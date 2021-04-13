@@ -20,10 +20,11 @@
                |--- MyParaTTS.vue  # 语音合成页面
           |--- ...
      |--- ...
-|--- client.py      # 接口测试脚本
+|--- client.py         # 接口测试脚本
 |--- LICENSE
-|--- README.md      # 说明文档
-|--- server.py      # 服务器运行脚本
+|--- README.md         # 说明文档
+|--- requirements.txt  # 依赖文件
+|--- server.py         # 服务器端启动脚本
 ```
 
 ## 快速开始
@@ -34,6 +35,7 @@ $ cd PTTS-WebAPP/frontend/
 $ npm install --save
 $ npm run dev
 $ cd ..
+$ pip install -r requirements.txt
 $ python server.py
 $ python client.py
 ```
@@ -48,11 +50,12 @@ $ python client.py
 
 ## 一些问题
 
-- 语音合成后端基于我自己的另一个项目 [atomicoo/ParallelTTS](https://github.com/atomicoo/ParallelTTS)，但为了简化代码修改了代码结构，如果想要换成其他语言的话，理论上只需要替换掉 `config` 和 `pretrained` 两个目录下的文件即可，但没有经过测试，不能确保不出现问题。
-- 目前只支持调整语速，后续会增加音量和语调的调整，如果有大佬能帮忙搞定就更好了 [doge]。
+- 语音合成后端基于我自己的另一个项目 [atomicoo/ParallelTTS](https://github.com/atomicoo/ParallelTTS)，但为了简化重构了代码结构，如果想要换成其他语言的话，理论上只需要替换掉 `./config/` 下的配置文件和 `./pretrained/` 下的模型文件即可，但没有经过完全测试，不能确保不会出现问题。
+- ~~目前只支持调整语速，后续会增加音量和语调的调整，如果有大佬能帮忙搞定就更好了 [doge]。~~（已完成）
+- 语调的调整使用 <u>变速不变调（TSM）+ 重采样</u> 方案来完成；音量的调整使用比较简单粗暴的方式，后续会改掉。
 
 ## 参考资料
 
 - [Flask：Python Web 微框架](https://flask.palletsprojects.com/en/1.1.x/)
-
 - [Vuetify：Material Design 框架](https://vuetifyjs.com/zh-Hans/)
+- [变速不变调方法总结 - 知乎](https://zhuanlan.zhihu.com/p/337193578)

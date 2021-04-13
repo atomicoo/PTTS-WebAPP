@@ -33,10 +33,11 @@ def api_random():
 
 @app.route('/api/mytts', methods=['GET', 'POST'])
 def api_mytts():
-    print(request.json)
     req = request.json if request.method == 'POST' else request.args
-    text, speed = req.get('text'), req.get('speed', 3)
-    waves, sr = tts([text], 4/speed)
+    print(req)
+    text, speed, volume, tone = \
+        req.get('text'), req.get('speed', 4), req.get('volume', 4), req.get('tone', 4)
+    waves, sr = tts([text], int(speed), int(volume), int(tone))
     filepath = osp.join('dist', 'demo.wav')
     write(filepath, sr, waves[0])
     return send_file(filepath)

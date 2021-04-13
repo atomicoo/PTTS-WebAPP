@@ -57,7 +57,7 @@ class Synthesizer:
         self.vocoder.load_state_dict(checkpoint)
         print("Loaded melgan checkpoint finished")
 
-    def inference(self, texts, alpha=1.0):
+    def inference(self, texts, alpha=1.0, beta=1.0):
         print('Synthesizing...')
         since = time.time()
         texts, tlens = self.processor(texts)
@@ -66,7 +66,7 @@ class Synthesizer:
         tlens = torch.Tensor(tlens).to(self.device)
         with torch.no_grad():
             melspecs, prd_durans = self.model((texts, tlens, None, alpha))
-        melspecs = self.normalizer.inverse(melspecs)
+        melspecs = self.normalizer.inverse(melspecs * beta)
         msk = mask(melspecs.shape, prd_durans.sum(dim=-1).long(), dim=1).to(self.device)
         melspecs = melspecs.masked_fill(~msk, -11.5129).permute(0, 2, 1)
         melspecs = torch.cat((melspecs, -11.5129*torch.ones(len(melspecs), melspecs.size(1), 3).to(self.device)), dim=-1)

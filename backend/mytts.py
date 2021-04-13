@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os.path as osp
+import librosa
 
 import torch
 from .hparams import HParam
@@ -60,6 +61,14 @@ class MyTTS:
             device=device
         )
 
-    def __call__(self, texts, alpha=1.0):
-        return self.synthesizer.inference(texts, alpha=alpha).cpu().detach().numpy(), self.hparams.audio.sampling_rate
+    def __call__(self, texts, speed, volume, tone):
+        rate = int(tone) / 3
+        alpha = (4 / int(speed)) * rate
+        beta = int(volume) / 3
+        wave = self.synthesizer.inference(texts, alpha=alpha, beta=beta)
+        wave = wave.cpu().detach().numpy()
+        sr = self.hparams.audio.sampling_rate
+        # use TSM + resample to change tone
+        wave = librosa.core.resample(wave, int(sr*rate), sr)
+        return wave, sr
 

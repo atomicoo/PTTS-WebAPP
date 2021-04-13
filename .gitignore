@@ -1,6 +1,7 @@
 # Projects
 .vscode/
 dist/
+outputs/
 000-*
 
 # Logs

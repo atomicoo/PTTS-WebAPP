@@ -1,0 +1,9 @@
+requests==2.25.0
+Flask==1.1.2
+Flask_Cors==3.0.9
+scipy==1.5.4
+numpy==1.19.2
+numba==0.48.0
+g2p_en==2.1.0
+torch==1.5.0
+PyYAML==5.4.1

@@ -29,7 +29,6 @@
 
             <v-slider
               v-model="volume"
-              disabled
               max="5" min="1" step="1"
               thumb-label
               thumb-size="24"
@@ -41,7 +40,6 @@
 
             <v-slider
               v-model="tone"
-              disabled
               max="5" min="1" step="1"
               thumb-label
               thumb-size="24"
@@ -77,13 +75,14 @@ export default {
   data () {
     return {
       wave_url: 'demo.wav',
-      speed: 3,
-      volume: 4,
-      tone: 4,
-      text: 'Welcome to my parallel text-to-speech system !'
+      speed: 4,
+      volume: 3,
+      tone: 3,
+      text: 'Welcome to my parallel text to speech system !'
     }
   },
   methods: {
+    // Ref: https://blog.csdn.net/qq_41844169/article/details/101028469
     getAudioFromBackend () {
       const path = '/api/mytts'
       axios({
